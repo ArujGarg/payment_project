@@ -4,6 +4,9 @@ import "./globals.css";
 import { Providers } from "../Provider";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./lib/auth";
+import { AppbarClient } from "../components/AppbarClient";
+
+export const dynamic = "force-dynamic";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,7 +32,10 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers session={session}>{children}</Providers>
+        <Providers session={session}>
+          <AppbarClient />
+          {children}
+        </Providers>
       </body>
     </html>
   );
