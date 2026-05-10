@@ -7,11 +7,13 @@ import { OnRampTransactions } from "../../../components/OnRampTransaction";
 
 async function getBalance() {
   const session = await getServerSession(authOptions);
+  console.log("session. ", session);
   const balance = await prisma.balance.findFirst({
     where: {
       userId: Number(session?.user?.id),
     },
   });
+  console.log("get balanceasdasd ", balance);
   return {
     amount: balance?.amount || 0,
     locked: balance?.locked || 0,
@@ -25,17 +27,20 @@ async function getOnRampTransactions() {
       userId: Number(session?.user?.id),
     },
   });
-  return txns.map((t) => ({
+  return txns.map((t: any) => ({
     time: t.startTime,
     amount: t.amount,
     status: t.status,
     provider: t.provider,
+    id: t.id,
   }));
 }
 
 export default async function () {
   const balance = await getBalance();
   const transactions = await getOnRampTransactions();
+
+  console.log("balance ", balance);
 
   return (
     <div className="w-screen">

@@ -18,16 +18,20 @@ app.post("/hdfcWebhook", async (req, res) => {
   };
 
   try {
-    await db.$transaction([
-      db.balance.updateMany({
+    const repsonse = await db.$transaction([
+      db.balance.upsert({
         where: {
           userId: Number(paymentInformation.userId),
         },
-        data: {
+        update: {
           amount: {
-            // You can also get this from your DB
             increment: Number(paymentInformation.amount),
           },
+        },
+        create: {
+          userId: Number(paymentInformation.userId),
+          amount: Number(paymentInformation.amount),
+          locked: 0,
         },
       }),
       db.onRampTransaction.updateMany({
@@ -40,13 +44,15 @@ app.post("/hdfcWebhook", async (req, res) => {
       }),
     ]);
 
+    console.log("response of update ", repsonse);
+
     res.status(200).json({
       message: "Captured",
     });
   } catch (e) {
-    console.error(e);
+    // console.error("WEBHOOK ERROR:", e);
     res.status(411).json({
-      message: "Error while processing webhook",
+      message: "Error while processing webhook1",
     });
   }
 });
