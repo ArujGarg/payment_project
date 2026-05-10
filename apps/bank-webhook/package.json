@@ -10,7 +10,8 @@
     "dev": "npm run build && npm run start"
   },
   "dependencies": {
-    "@repo/db": "*"
+    "@repo/db": "*",
+    "express": "^4.18.2"
   },
   "keywords": [],
   "author": "",
