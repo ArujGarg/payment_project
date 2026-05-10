@@ -7,6 +7,7 @@ app.use(express.json());
 app.post("/hdfcWebhook", async (req, res) => {
   //TODO: Add zod validation here?
   //TODO: HDFC bank should ideally send us a secret so we know this is sent by them
+  //TODO: Check if this transaction is processing or not and only then process it
   const paymentInformation: {
     token: string;
     userId: string;
@@ -44,13 +45,11 @@ app.post("/hdfcWebhook", async (req, res) => {
       }),
     ]);
 
-    console.log("response of update ", repsonse);
-
     res.status(200).json({
       message: "Captured",
     });
   } catch (e) {
-    // console.error("WEBHOOK ERROR:", e);
+    console.error("WEBHOOK ERROR:", e);
     res.status(411).json({
       message: "Error while processing webhook1",
     });
